@@ -4,7 +4,7 @@ from flask import Flask,render_template,redirect,url_for,request,jsonify
 
 import sqlite3
 
-import datetime
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -79,17 +79,17 @@ def filter_expenses():
 
     if filter_type == "day" :
         today = datetime.now().strftime("%Y-%m-%d")
-        cur.execute("SELECT * FROM expenses WHERE date = ?",(today))
+        cur.execute("SELECT * FROM expenses WHERE date = ?",(today,))
         title = f"Expenses for Today - {today}"
 
     elif filter_type == "month":
         month = datetime.now().strftime("%Y-%m")
-        cur.execute("SELECT * FROM expenses WHERE strftime('%Y-%m',date)= ?",(month))
+        cur.execute("SELECT * FROM expenses WHERE strftime('%Y-%m',date)= ?",(month,))
         title = f"Expenses for This Month - {month}"
 
     elif filter_type == "year":
         year = datetime.now().strftime("%Y")
-        cur.execute("SELECT * FROM expenses WHERE strftime('%Y',date)=?",(year))
+        cur.execute("SELECT * FROM expenses WHERE strftime('%Y',date)=?",(year,))
         title = f"Expenses for This Year - {year}"
 
     elif filter_type == "quarter":
@@ -146,8 +146,8 @@ def filter_expenses():
         
     # Group By Category caculated total of amount
 # using chart 
-@app.route('/chart-date')
-def chart_date():
+@app.route('/chart-data')
+def chart_data():
     conn = sqlite3.connect("expenses.db")
     cur = conn.cursor()
     cur.execute("SELECT category, SUM(amount) FROM expenses GROUP BY category")
